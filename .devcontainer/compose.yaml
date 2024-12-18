@@ -1,0 +1,28 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/base:jammy
+    volumes:
+      - ..:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      DB_URL: jdbc:postgresql://db:5432/postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    command: sleep infinity
+
+  db:
+    image: postgres:17.2
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+
+volumes:
+  postgres-data:
